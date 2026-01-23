@@ -21,3 +21,5 @@
 
 
 We presented ARCADE, an evaluation framework that bridges the gap between insufficient quantitative benchmarks and hard-to-do visual evaluation. By providing a reusable pipeline and interactive AR tasks, ARCADE enables researchers to complement metrics with direct visual inspection.
+
+![teaser](Teaser.png)
