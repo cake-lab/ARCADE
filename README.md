@@ -42,9 +42,10 @@ ARCADE is an evaluation framework that bridges the gap between quantitative benc
 | `src/server/` | Backend server (Tornado, handlers, workers) |
 | `src/IOS_APP/` | iOS client for live capture |
 | `src/webUI/` | Web interface |
-| `examples/lighting/` | Lighting case study example |
-| `examples/docker/` | Docker example for adding containerized models |
-| `data/` | Captured sessions |
+| `src/case_study/lighting/` | Lighting case study example |
+| `src/case_study/lighting/xihe` | Docker example for adding containerized models |
+| `data/sessions/` | Captured sessions |
+| `data/3D_models/` | 3D models |
 
 For a detailed breakdown of server modules—handlers, workers, state, config, and how to extend them. 
 >**Detailed breakdown of server modules:** See [README.md](src/server/README.md).
@@ -113,7 +114,7 @@ Captured sessions are saved in `data/sessions/`. When you capture a session from
 
 | Platform | Instructions |
 |----------|--------------|
-| **iOS** | Build and run the included app. See [src/IOS_APP/README.md](src/IOS_APP/README.md) for build instructions. |
+| **iOS** | Build and run the included app. See [README.md](./src/IOS_APP/README.md) for build instructions. |
 | **Android & cross-platform** | Use [ARFlow](https://github.com/cake-lab/ARFlow) for prebuilt clients and data streaming to the ARCADE server. |
 
 ---
