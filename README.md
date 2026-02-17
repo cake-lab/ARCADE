@@ -142,7 +142,7 @@ To add models that run in isolated environments or require different dependencie
 - Connect it to the ARCADE server
 - Register and use it alongside built-in inference models
 
-See `case_study/lighting/README.md` for setup and usage.
+See [README.md](case_study/lighting/README.md) for setup and usage.
 
 ---
 
