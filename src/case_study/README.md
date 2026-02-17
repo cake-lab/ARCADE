@@ -1,6 +1,6 @@
 # Case Study Examples
 
-See [xihe](./xihe) as an example.
+See [lighting/xihe](./lighting/xihe/README.md) as an example.
 
 External programs can be packaged into Docker containers to be used in ARCADE.
 
