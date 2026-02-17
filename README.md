@@ -2,7 +2,7 @@
 
 # ARCADE
 
-### AR as an Evaluation Playground: Bridging Metric and Visual Perception of Computer Vision Models**
+### AR as an Evaluation Playground: Bridging Metric and Visual Perception of Computer Vision Models
 
 [![arXiv](https://img.shields.io/badge/arXiv-2508.04102-b31b1b.svg)](https://arxiv.org/abs/2508.04102)
 
