@@ -47,8 +47,7 @@ ARCADE is an evaluation framework that bridges the gap between quantitative benc
 | `data/sessions/` | Captured sessions |
 | `data/3D_models/` | 3D models |
 
-For a detailed breakdown of server modules—handlers, workers, state, config, and how to extend them. 
->**Detailed breakdown of server modules:** See [README.md](src/server/README.md).
+>For a detailed breakdown of server modules—handlers, workers, state, config, and how to extend them. See [README.md](src/server/README.md).
 
 
 ## Installation
