@@ -1,0 +1,14 @@
+# ARCADE Conda environment (matches Arcade env)
+# Create: conda env create -f environment.yml
+# Activate: conda activate Arcade
+#
+# Python 3.10, PyTorch (CUDA 12.6) + pip deps from requirements.txt
+
+name: Arcade
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - -r requirements.txt

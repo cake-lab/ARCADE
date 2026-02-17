@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ARCADE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FileLoader.js"></script>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-lg border-b border-gray-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <h1 class="text-2xl font-bold text-gray-800">AR as an Evaluation Playground</h1>
+        <div class="flex items-center space-x-4">
+          <span id="status" class="text-gray-600">Not connected</span>
+          <button id="disconnectBtn" type="button" class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-md hover:bg-gray-200 hidden">Disconnect</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-6">
+    <!-- Connection Section -->
+    <div id="connectionSection" class="bg-white rounded-lg shadow p-6 mb-8">
+      <h2 class="text-xl font-semibold text-gray-700 mb-4">Connect to Server</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="ipAddress" class="block text-gray-600 font-medium mb-1">IP Address</label>
+          <input id="ipAddress" type="text" value="100.78.65.25" placeholder="Enter IP Address" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+        </div>
+        <div>
+          <label for="port" class="block text-gray-600 font-medium mb-1">Port</label>
+          <input id="port" type="number" value="5034" placeholder="Enter Port" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+        </div>
+      </div>
+      <div class="mt-4 flex gap-3">
+        <button id="connectBtn" type="button" class="flex-1 bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition duration-150 btn">Connect</button>
+        <button id="disconnectBtn" type="button" class="flex-1 bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition duration-150 btn">Disconnect</button>
+      </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="hidden">
+      <!-- Navigation Card -->
+      <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Features</h2>
+        <nav class="flex flex-wrap gap-2">
+          <button id="liveTab" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-purple-100 hover:text-purple-600 tab transition-colors">Live Stream</button>
+          <button id="replayTab" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-purple-100 hover:text-purple-600 tab transition-colors">Replay</button>
+          <button id="analysisTab" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-purple-100 hover:text-purple-600 tab transition-colors">Frame Analysis</button>
+          <button id="renderPositionsTab" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-purple-100 hover:text-purple-600 tab transition-colors">Render Positions</button>
+          <button id="datasetTab" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-purple-100 hover:text-purple-600 tab transition-colors">Dataset Viewer</button>
+          <button id="uploadModelTab" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-purple-100 hover:text-purple-600 tab transition-colors">Upload Model</button>
+          <button id="pointTab" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-purple-100 hover:text-purple-600 tab transition-colors">Point Cloud</button>
+        </nav>
+      </div>
+
+      <!-- Session Management Section -->
+      <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-800">Session Selection</h2>
+          <button id="refreshGlobalSessionsBtn" type="button" class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-md hover:bg-gray-200">Refresh</button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="globalSessionSelect" class="block text-sm font-medium text-gray-600 mb-2">Select Session</label>
+            <select id="globalSessionSelect" class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-purple-400">
+              <option value="">Choose a session...</option>
+            </select>
+          </div>
+          <div>
+            <label for="globalFrameInput" class="block text-sm font-medium text-gray-600 mb-2">Frame Number</label>
+            <input id="globalFrameInput" type="number" placeholder="Enter frame number" class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-purple-400">
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Left Sidebar -->
+        <aside class="lg:col-span-1 space-y-6">
+          <!-- 3D Mesh Objects -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 card">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">3D Mesh Objects</h3>
+            
+            <!-- Mesh Upload -->
+            <div class="space-y-3">
+              <div>
+                <label for="meshFile" class="block text-sm font-medium text-gray-600 mb-2">Upload Mesh (.obj)</label>
+                <input id="meshFile" type="file" accept=".obj" class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+              </div>
+              
+              <div class="flex gap-2">
+                <button id="uploadMeshBtn" type="button" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 text-sm font-medium">Upload</button>
+                <button id="refreshMeshesBtn" type="button" class="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg hover:bg-green-700 text-sm font-medium">Refresh</button>
+              </div>
+              
+              <div class="bg-gray-50 rounded-lg p-3 min-h-[120px]">
+                <ul id="meshList" class="space-y-1"></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Models & Inference -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 card">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Models & Inference</h3>
+            
+            <!-- Model Selection -->
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="text-sm font-semibold text-gray-700">Available Models</h4>
+                <span id="modelCount" class="text-xs text-gray-500">0 selected</span>
+              </div>
+              
+              <!-- Model List -->
+              <div id="modelList" class="space-y-2 max-h-[120px] overflow-y-auto border border-gray-200 rounded-lg p-3 bg-gray-50">
+                <p class="text-xs text-gray-500 text-center py-4">No models available</p>
+              </div>
+            </div>
+            
+            <!-- Apply Button -->
+            <button id="applyModelsBtn" type="button" class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 text-sm font-medium disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Apply Selected Models</button>
+          </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <section class="lg:col-span-2 space-y-6">
+          <!-- Live Stream Section -->
+          <div id="liveContent" class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Live Stream</h3>
+            <div class="w-full border-2 border-gray-200 rounded-xl shadow-md bg-black overflow-hidden" style="min-height: 400px;">
+              <img id="liveStream" alt="Live stream will appear here" class="w-full object-contain rounded-lg">
+            </div>
+          </div>
+
+          <!-- Replay Section -->
+          <div id="replayContent" class="hidden bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Replay Stream</h3>
+            <p id="replayInfo" class="text-sm text-gray-600 mb-4 bg-blue-50 px-3 py-2 rounded-lg"></p>
+            <button id="loadReplayBtn" type="button" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-medium">Load Replay</button>
+            <div id="replayGrid" class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+          </div>
+
+          <!-- Analysis Section -->
+          <div id="analysisContent" class="hidden bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Frame Analysis</h3>
+            
+            <!-- Load Frame Button -->
+            <div class="mb-6">
+              <button id="loadFrameBtn" type="button" class="bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 font-medium">Load Frame</button>
+            </div>
+            
+            <!-- Frame Range Info -->
+            <div id="frameRangeDetails" class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
+              <p class="text-sm text-blue-800">
+                <strong>Available frames:</strong> <span id="frameCount">0</span> frames in session "<span id="sessionName">unknown</span>"
+              </p>
+            </div>
+            <div id="frameDetails" class="mt-6 space-y-6 hidden">
+              <div class="grid grid-cols-3 gap-4">
+                <div class="image-container">
+                  <h4 class="text-md font-medium text-gray-700 mb-2">Raw RGB</h4>
+                  <img id="detailRGB_0" class="w-full rounded-lg border shadow-sm" loading="lazy">
+                </div>
+                <div class="image-container">
+                  <h4 class="text-md font-medium text-gray-700 mb-2">Composite (Original)</h4>
+                  <img id="detailComposite_0" class="w-full rounded-lg border shadow-sm" loading="lazy">
+                </div>
+                <div class="image-container">
+                  <h4 class="text-md font-medium text-gray-700 mb-2">Original Depth</h4>
+                  <img id="detailOriginalDepth_0" class="w-full rounded-lg border shadow-sm" loading="lazy">
+                </div>
+              </div>
+              <div id="frameDetailsRows" class="space-y-6"></div>
+            </div>
+          </div>
+
+          <!-- Model Upload Section -->
+          <div id="uploadModelContent" class="hidden bg-white rounded-lg shadow p-4">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Upload New Inference Model</h3>
+            <div class="mb-4">
+              <p class="text-gray-700 mb-2 font-semibold">Example: DepthAnything</p>
+              <pre><code>from transformers import pipeline
+from PIL import Image
+import numpy as np
+from modules.inference.base import InferenceModel
+
+class DepthAnythingModel(InferenceModel):
+    def __init__(self):
+        self.pipe = pipeline(task="depth-estimation", model="Name")
+    def infer(self, rgb_image: np.ndarray) -> np.ndarray:
+        image = Image.fromarray(rgb_image)
+        result = self.pipe(image)
+        depth = result["predicted_depth"]
+        depth = np.array(depth)
+        return depth</code></pre>
+            </div>
+            <div>
+              <label for="inferenceModelFile" class="block text-gray-600 font-medium mb-1">Upload Your Model (.py)</label>
+              <input id="inferenceModelFile" type="file" accept=".py" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+              <button id="uploadModelBtn" type="button" class="w-full mt-3 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-150 btn">Upload Model</button>
+            </div>
+          </div>
+
+          <!-- Point Cloud Viewer Section -->
+          <div id="pointCloudContent" class="hidden bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Point Cloud Viewer</h3>
+            
+            <!-- Generate Point Cloud Button -->
+            <div class="mb-6">
+              <button id="generatePointCloudBtn" type="button" class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 font-medium">Generate Point Cloud</button>
+            </div>
+            
+            <!-- Point Cloud Info -->
+            <div id="pointCloudInfo" class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
+              <p class="text-sm text-blue-800">
+                <strong>Point Clouds Generated!</strong> Click the download button below to get the ZIP file containing all point clouds.
+              </p>
+            </div>
+            
+            <!-- Available Point Clouds List -->
+            <div id="pointCloudList" class="mb-4 hidden">
+              <h4 class="text-sm font-semibold text-gray-700 mb-2">Available Point Clouds:</h4>
+              <div id="pointCloudItems" class="space-y-1 text-sm text-gray-600"></div>
+            </div>
+            
+            <!-- Download Button -->
+            <div id="pointCloudDownload" class="mb-6 hidden">
+              <button id="downloadPointCloudBtn" type="button" class="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 font-medium">📥 Download All Point Clouds (ZIP)</button>
+            </div>
+            
+            <!-- Point Cloud Preview -->
+            <div id="pointCloudPreview" class="hidden">
+              <h4 class="text-lg font-semibold text-gray-700 mb-3">Point Clouds Generated</h4>
+              <div class="bg-green-100 rounded-lg p-4 text-center mb-4">
+                <p class="text-green-800 font-medium">✅ Point clouds generated successfully!</p>
+                <p class="text-sm text-green-600 mt-2">Your ZIP file containing multiple PLY files is ready for download</p>
+                <p class="text-xs text-green-500 mt-1">You can view them using online PLY viewers or 3D software like Blender, MeshLab, etc.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Render Positions Section -->
+          <div id="renderPositionsContent" class="hidden bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Render Candidate Positions</h3>
+            
+            <!-- Render Button -->
+            <div class="mb-6">
+              <button id="renderPositionsBtn" type="button" class="w-full bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-medium">Render Candidate Positions</button>
+            </div>
+            
+            <!-- Info Message -->
+            <div class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <p class="text-sm text-blue-800">
+                Select a session and frame number above, then click the button to render candidate positions.
+              </p>
+            </div>
+            
+            <!-- Results Grid -->
+            <div id="renderPositionsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+          </div>
+
+          <!-- Dataset Viewer Section -->
+          <div id="datasetContent" class="hidden bg-white rounded-lg shadow p-4">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Dataset Viewer</h3>
+            <div>
+              <p class="text-gray-700 mb-2 font-semibold">Dataset: ScanNet</p>
+              <div class="mb-4">
+                <label for="datasetFrameId" class="block text-gray-600 font-medium mb-1">
+                  Enter Frame ID (max: <span id="maxFrameId">N/A</span>)
+                </label>
+                <input id="datasetFrameId" type="number" placeholder="Enter frame id" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
+              </div>
+              <button id="loadDatasetFrameBtn" type="button" class="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition duration-150 btn">Load Dataset Frame</button>
+              
+              <!-- Display base images in one row -->
+              <div class="mt-4 grid grid-cols-3 gap-4">
+                <div class="image-container">
+                  <h4 class="text-lg font-semibold text-gray-700 mb-2">Original RGB</h4>
+                  <img id="datasetOriginalRGB" class="w-full rounded-lg border shadow-sm" alt="Original RGB" loading="lazy">
+                </div>
+                <div class="image-container">
+                  <h4 class="text-lg font-semibold text-gray-700 mb-2">Composite</h4>
+                  <img id="datasetCompositeImage" class="w-full rounded-lg border shadow-sm" alt="Composite Image" loading="lazy">
+                </div>
+                <div class="image-container">
+                  <h4 class="text-lg font-semibold text-gray-700 mb-2">GT Depth Map</h4>
+                  <img id="datasetGTDepth" class="w-full rounded-lg border shadow-sm" alt="GT Depth Map" loading="lazy">
+                </div>
+              </div>
+              
+              <!-- One-line info -->
+              <div id="datasetFrameInfoLine" class="mt-2 text-sm text-gray-700"></div>
+              
+              <!-- Inference Results Grid -->
+              <div id="inferenceResultsSection" class="mt-4">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Inference Results</h4>
+                <div id="inferenceResultsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                <!-- Metrics Table -->
+                <div id="inferenceMetricsContainer" class="mt-4">
+                  <h4 class="text-lg font-semibold text-gray-700">Inference Metrics</h4>
+                  <table id="inferenceMetricsTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr>
+                        <th class="px-2 py-1 text-xs font-medium text-gray-500 uppercase">Model</th>
+                        <th class="px-2 py-1 text-xs font-medium text-gray-500 uppercase">RMSE</th>
+                        <th class="px-2 py-1 text-xs font-medium text-gray-500 uppercase">MSE</th>
+                        <th class="px-2 py-1 text-xs font-medium text-gray-500 uppercase">AbsRel</th>
+                        <th class="px-2 py-1 text-xs font-medium text-gray-500 uppercase">A1</th>
+                        <th class="px-2 py-1 text-xs font-medium text-gray-500 uppercase">A2</th>
+                        <th class="px-2 py-1 text-xs font-medium text-gray-500 uppercase">A3</th>
+                      </tr>
+                    </thead>
+                    <tbody id="inferenceMetricsTableBody" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Right Sidebar -->
+        <aside class="lg:col-span-1 space-y-6">
+          <!-- Virtual Object Settings -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 card">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Virtual Object Settings</h3>
+            
+            <div class="space-y-4">
+              <!-- Mode Selection -->
+              <div>
+                <label for="virtualModeSelect" class="block text-sm font-medium text-gray-600 mb-2">Mode</label>
+                <select id="virtualModeSelect" class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                  <option value="object">Object</option>
+                  <option value="plane" selected>Plane</option>
+                </select>
+                <p class="mt-1 text-xs text-gray-500">Select placement mode</p>
+              </div>
+
+              <!-- Object Position (shown only for Object mode) -->
+              <div id="objectPositionSection" class="hidden">
+                <label class="block text-sm font-medium text-gray-600 mb-2">Position</label>
+                
+                <!-- 3D Axis Reference -->
+                <div class="mb-3 p-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <div class="text-xs text-gray-500 text-center space-y-1">
+                    <div><span class="inline-block w-3 h-3 bg-red-500 mr-1.5"></span>X: Right (+) / Left (-)</div>
+                    <div><span class="inline-block w-3 h-3 bg-green-500 mr-1.5"></span>Y: Up (+) / Down (-)</div>
+                    <div><span class="inline-block w-3 h-3 bg-blue-500 mr-1.5"></span>Z: Forward (+) / Back (-)</div>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-2">
+                  <div>
+                    <label for="virtualPosX" class="block text-xs text-gray-500 mb-1 flex items-center">
+                      <span class="inline-block w-3 h-3 bg-red-500 mr-1"></span>X
+                    </label>
+                    <input id="virtualPosX" type="number" step="0.01" placeholder="0.0" class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                  </div>
+                  <div>
+                    <label for="virtualPosY" class="block text-xs text-gray-500 mb-1 flex items-center">
+                      <span class="inline-block w-3 h-3 bg-green-500 mr-1"></span>Y
+                    </label>
+                    <input id="virtualPosY" type="number" step="0.01" placeholder="0.0" class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                  </div>
+                  <div>
+                    <label for="virtualPosZ" class="block text-xs text-gray-500 mb-1 flex items-center">
+                      <span class="inline-block w-3 h-3 bg-blue-500 mr-1"></span>Z
+                    </label>
+                    <input id="virtualPosZ" type="number" step="0.01" placeholder="0.0" class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Virtual Depth (shown only for Plane mode) -->
+              <div id="virtualDepthSection">
+                <label for="virtualDepthInput" class="block text-sm font-medium text-gray-600 mb-2">Virtual Depth</label>
+                <input id="virtualDepthInput" type="number" step="0.01" value="0.5" placeholder="e.g., 0.5" class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                <p class="mt-1 text-xs text-gray-500">Controls AR object placement depth</p>
+              </div>
+
+              <!-- Load Default Position Button (shown only for Object mode) -->
+              <div id="loadDefaultPositionSection" class="hidden">
+                <button id="loadDefaultPositionBtn" type="button" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 text-sm font-medium">Load Default Position</button>
+                <p class="mt-1 text-xs text-gray-500">Load position from session metadata (or most recent session)</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- HTML Templates -->
+  <template id="meshItemTemplate">
+    <li class="list-item selectable"></li>
+  </template>
+  <template id="sessionItemTemplate">
+    <li class="list-item selectable"></li>
+  </template>
+  <template id="frameItemTemplate">
+    <li class="list-item selectable"></li>
+  </template>
+
+  <script src="main.js"></script>
+</body>
+</html>
