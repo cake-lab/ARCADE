@@ -19,7 +19,7 @@ ARCADE is an evaluation framework that bridges the gap between quantitative benc
 
 
 
-![Video](assets/teaser.gif)
+![Video](assets/Teaser.gif)
 
 
 ## Table of Contents
