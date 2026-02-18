@@ -151,16 +151,15 @@ See [README.md](./src/case_study/README.md) for setup and usage.
 If you use ARCADE in your research, please cite:
 
 ```bibtex
-@misc{ganj2026arevaluationplaygroundbridging,
-      title={AR as an Evaluation Playground: Bridging Metrics and Visual Perception of Computer Vision Models}, 
-      author={Ashkan Ganj and Yiqin Zhao and Tian Guo},
-      year={2026},
-      eprint={2508.04102},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2508.04102}, 
+@INPROCEEDINGS{Ganj-mmsys2026,
+  title     = "{AR as an Evaluation Playground: Bridging Metrics and Visual Perception of Computer Vision Models}",
+  author    = "Ganj, Ashkan and Zhao, Yiqin and Guo, Tian",
+  booktitle = "{Proceedings of the 17th ACM Multimedia Systems Conference}",
+  series    = "MMSys '26",
+  year      =  2026,
 }
 ```
+
 
 ---
 
