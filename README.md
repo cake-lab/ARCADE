@@ -3,8 +3,9 @@
 # ARCADE
 
 ### AR as an Evaluation Playground: Bridging Metric and Visual Perception of Computer Vision Models
-
+[![ACM](https://img.shields.io/badge/ACM-3793853.3795748-blue.svg)](https://dl.acm.org/doi/10.1145/3793853.3795748)
 [![arXiv](https://img.shields.io/badge/arXiv-2508.04102-b31b1b.svg)](https://arxiv.org/abs/2508.04102)
+
 
 [**Ashkan Ganj**](https://ashkanganj.me/)<sup>1</sup> · [**Yiqin Zhao**](https://yiqinzhao.phd/)<sup>2</sup> · [**Tian Guo**](https://tianguo.info/)<sup>1</sup>
 
@@ -151,15 +152,26 @@ See [README.md](./src/case_study/README.md) for setup and usage.
 If you use ARCADE in your research, please cite:
 
 ```bibtex
-@misc{ganj2026arevaluationplaygroundbridging,
-      title={AR as an Evaluation Playground: Bridging Metrics and Visual Perception of Computer Vision Models}, 
-      author={Ashkan Ganj and Yiqin Zhao and Tian Guo},
-      year={2026},
-      eprint={2508.04102},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2508.04102}, 
+@inproceedings{10.1145/3793853.3795748,
+      author = {Ganj, Ashkan and Zhao, Yiqin and Guo, Tian},
+      title = {AR as an Evaluation Playground: Bridging Metric and Visual Perception of Computer Vision Models},
+      year = {2026},
+      isbn = {9798400724817},
+      publisher = {Association for Computing Machinery},
+      address = {New York, NY, USA},
+      url = {https://doi.org/10.1145/3793853.3795748},
+      doi = {10.1145/3793853.3795748},
+            abstract = {Quantitative metrics are central to evaluating computer vision (CV) models, but they often fail to capture real-world performance due to protocol inconsistencies and ground truth noise. While visual perception studies can complement these metrics, they often require end-to-end systems that are time-consuming to implement and setups that are difficult to reproduce. We systematically summarize key challenges in evaluating CV models and present the design of ARCADE1, an evaluation platform that leverages augmented reality (AR) to enable easy, reproducible, and human-centered CV evaluation. ARCADE uses a modular architecture that provides cross-platform data collection, pluggable model inference, and interactive AR tasks, supporting both metric and visual perception evaluation. We demonstrate ARCADE through a user study with 15 participants and case studies on two representative CV tasks, depth and lighting estimation, showing ARCADE can help reveal perceptual flaws in model quality that are often missed by traditional metrics. We also evaluate ARCADE's usability and performance, showing its flexibility as a reliable real-time platform.},
+      booktitle = {Proceedings of the ACM Multimedia Systems Conference 2026},
+      pages = {72–83},
+      numpages = {12},
+      keywords = {Evaluation methodology, computer vision, augmented reality, depth estimation, lighting estimation},
+      location = {
+      },
+      series = {MMSys '26}
 }
+
+
 ```
 
 
